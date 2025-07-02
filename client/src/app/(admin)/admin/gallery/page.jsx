@@ -4,7 +4,7 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { MdDelete, MdEdit } from "react-icons/md";
-import Swal from "sweetalert2";
+import { toast } from 'react-toastify';
 import * as Yup from "yup";
 import { deleteGallery, getGalleries, getGalleryDetails, submitGallery, updateGallery } from "../../../actions/actions.js";
 import CustomModal from "../blogs/CustomModal.jsx";
@@ -107,59 +107,35 @@ const Editor = () => {
     }
 
     try {
-      const result = await updateGallery(currentGallery._id, formData);
-      if (result.success) {
-        Swal.fire({
-          title: "Success!",
-          text: "Gallery updated successfully!",
-          icon: "success",
-          timer: 2000,
-          showConfirmButton: false
-        });
-        
-        setIsEditModalOpen(false);
-        setCurrentGallery(null);
-        if (fileInputRef.current) {
-          fileInputRef.current.value = "";
-        }
-        fetchGalleries();
-      }
-    } catch (error) {
-      Swal.fire({
-        title: "Error!",
-        text: error.message || "Failed to update gallery",
-        icon: "error",
-        timer: 2000,
-        showConfirmButton: false
-      });
+  const result = await updateGallery(currentGallery._id, formData);
+  if (result.success) {
+    toast.success("Gallery updated successfully!", { autoClose: 2000 });
+    
+    setIsEditModalOpen(false);
+    setCurrentGallery(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
     }
-    setSubmitting(false);
+    fetchGalleries();
+  }
+} catch (error) {
+  toast.error(error.message || "Failed to update gallery", { autoClose: 2000 });
+}
+setSubmitting(false);
   };
 
-  const deleteGalleryHandler = (id) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        deleteGallery(id).then((res) => {
-          if (res.success) {
-            Swal.fire({
-              title: "Deleted!",
-              text: "Your gallery has been deleted.",
-              icon: "success",
-            });
-            fetchGalleries();
-          }
-        });
+const deleteGalleryHandler = (id) => {
+  if (window.confirm("Are you sure you want to delete this gallery? This action cannot be undone.")) {
+    deleteGallery(id).then((res) => {
+      if (res.success) {
+        toast.success("Gallery deleted successfully!");
+        fetchGalleries();
+      } else {
+        toast.error("Failed to delete gallery");
       }
     });
-  };
+  }
+};
 
   return (
     <section className="relative flex w-full min-h-screen justify-center items-center bg-gradient-to-r from-orang to-orang p-10">

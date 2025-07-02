@@ -3,7 +3,7 @@
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { useEffect, useRef, useState } from "react";
 import { MdDelete, MdEdit } from "react-icons/md";
-import Swal from "sweetalert2";
+import { toast } from 'react-toastify';
 import * as Yup from "yup";
 import { deleteblog, getblogDetails, getblogs, submitblog, updateblog } from "../../../actions/actions.js";
 import CustomModal from "./CustomModal.jsx";
@@ -103,13 +103,7 @@ const Editor = () => {
       const result = await updateblog(currentblog.slug, formData);
       if (result.success) {
         // Show success toast
-        Swal.fire({
-          title: "Success!",
-          text: "Blog updated successfully!",
-          icon: "success",
-          timer: 2000,
-          showConfirmButton: false
-        });
+         toast.success("Blog updated successfully!", { autoClose: 2000 });
         
         // Close modal and reset state
         setIsEditModalOpen(false);
@@ -120,50 +114,26 @@ const Editor = () => {
         fetchblogs();
       } else {
         // Show error toast
-        Swal.fire({
-          title: "Error!",
-          text: result.error || "Failed to update blog",
-          icon: "error",
-          timer: 2000,
-          showConfirmButton: false
-        });
+        toast.error(error.message || "Failed to update blog",{ autoClose: 2000 });
       }
     } catch (error) {
       // Show error toast
-      Swal.fire({
-        title: "Error!",
-        text: error.message || "Failed to update blog",
-        icon: "error",
-        timer: 2000,
-        showConfirmButton: false
-      });
+      toast.error(error.message || "Failed to update blog", { autoClose: 2000 });
     }
     setSubmitting(false);
   };
 
   const deleteblogHandler = (blogId) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        deleteblog(blogId).then((res) => {
-          if (res.success) {
-            Swal.fire({
-              title: "Deleted!",
-              text: "Your blog has been deleted.",
-              icon: "success",
-            });
-            fetchblogs();
-          }
-        });
-      }
-    });
+    if (window.confirm("Are you sure you want to delete this blog?")) {
+      deleteblog(blogId).then((res) => {
+        if (res.success) {
+          toast.success("Blog deleted successfully!");
+          fetchblogs();
+        } else {
+          toast.error("Failed to delete blog");
+        }
+      });
+    }
   };
 
   return (

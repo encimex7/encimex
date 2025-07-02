@@ -3,7 +3,7 @@
 import { ErrorMessage, Field, FieldArray, Form, Formik } from "formik";
 import { useEffect, useRef, useState } from "react";
 import { MdDelete, MdEdit } from "react-icons/md";
-import Swal from "sweetalert2";
+import { toast } from 'react-toastify';
 import * as Yup from "yup";
 import { deleteService, getServiceDetails, getServices, submitService, updateService } from "../../../actions/actions.js";
 import CustomModal from "../blogs/CustomModal.jsx";
@@ -191,30 +191,20 @@ const ServiceEditor = () => {
     setSubmitting(false);
   };
 
-  const deleteServiceHandler = (serviceId) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        deleteService(serviceId).then((res) => {
-          if (res.success) {
-            Swal.fire({
-              title: "Deleted!",
-              text: "Your service has been deleted.",
-              icon: "success",
-            });
-            fetchServices();
-          }
-        });
+const deleteServiceHandler = (serviceId) => {
+  if (window.confirm("Are you sure you want to delete this service? This action cannot be undone.")) {
+    deleteService(serviceId).then((res) => {
+      if (res.success) {
+        toast.success("Service deleted successfully!");
+        fetchServices();
+      } else {
+        toast.error("Failed to delete service");
       }
+    }).catch((error) => {
+      toast.error(error.message || "Error deleting service");
     });
-  };
+  }
+};
 
   return (
     <section className="relative flex w-full min-h-screen justify-center items-center bg-gradient-to-r from-orang to-orang p-10">

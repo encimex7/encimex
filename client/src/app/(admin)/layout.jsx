@@ -1,6 +1,8 @@
 
 import "../../styles/globals.css";
 import Sidebar from "../../components/admin/sidebar.jsx";
+import { ToastContainer } from 'react-toastify'; // Add this import
+import 'react-toastify/dist/ReactToastify.css'; // Add the CSS
 
 
 export const metadata = {
@@ -22,6 +24,18 @@ export default function AdminLayout({ children }) {
           <div className=" md:ml-16">
             <div className="flex w-full gap-10">{children}</div>
           </div>
+           <ToastContainer
+            position="top-right"
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+          />
         </div>
       </body>
     </html>
