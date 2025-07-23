@@ -60,6 +60,7 @@ const Sidebar = () => {
         toggle ? "w-64" : "w-16"
       } bg-gray-100 dark:bg-gray-800`}
     >
+      {/* button added */}
       <div className="h-full px-3 py-4  relative">
         <button
           className={`absolute transition-all duration-700 ease-in-out  top-4 border-2 p-1 rounded-full hover:bg-slate-800 border-slate-800 hover:text-white right-3`}
