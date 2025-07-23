@@ -100,6 +100,7 @@ const Sidebar = () => {
                 })
               }}
             >
+              {/* logout button */}
               <LogOut size={25} />
               <span
                 className={`ms-3 transition-opacity duration-300 ${
