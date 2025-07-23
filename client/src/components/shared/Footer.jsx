@@ -113,9 +113,9 @@ export default function ContactSection() {
   
             {/* Contact Information */}
             <div className="space-y-2 font-light">
-              <p>IND : +91 7012127746</p>
-              <p>UK : +44 770 915 5662</p>
-              <p>USA : +1(515)302-1187</p>
+              <p>IND : +91 7012127749</p>
+              <p>UK : +44 770 015 5652</p>
+              <p>USA : +1(315)302-1187</p>
               <div className="mt-6">
                 <p>GS2 Heavenly Plaza Vazhakkala,</p>
                 <p>Cochin,India 682021</p>

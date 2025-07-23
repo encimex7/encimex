@@ -710,9 +710,6 @@ export async function getGalleryImages(title) {
   try {
     const galleryImages = await Gallery.find({ title }).select('image subTitle _id').lean();
     console.log("Gallery images:", galleryImages);
-    console.log("Gallery images:", galleryImages);
-
-
     return { galleryImages: JSON.stringify(galleryImages), success: true };
   } catch (err) {
     console.log(err);

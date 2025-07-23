@@ -19,7 +19,7 @@ export default function FAQAccordion() {
       id: 2,
       number: "02",
       question: "What types of engineering services does Encimex offer?",
-      answer: "Encimex offers a wide range of services including civil, structural, mechanical, electrical, environmental, and infrastructure engineering. We also provide feasibility studies, project planning, design development, construction supervision, and sustainability consulting."
+      answer: "Encimex offers a wide range of services including steel detailing, rebar detailing, connection design and P/E stamping, MEP & architectural BIM services and Façade detailing. We are using advance software’s for accomplishing each kind of services."
     },
     {
       id: 3,

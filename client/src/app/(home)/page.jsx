@@ -20,11 +20,8 @@ export default function Home() {
       <About />
       <ServicesSection />
       <AcheivementSection />
-
       <Chooseus />
-
       <InnovatureSection />
-
       <TestimonialSection />
       <GallerySection />
       {/* <TextSection /> */}

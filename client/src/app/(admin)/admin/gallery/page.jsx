@@ -138,7 +138,7 @@ const deleteGalleryHandler = (id) => {
 };
 
   return (
-    <section className="relative flex w-full min-h-screen justify-center items-center bg-gradient-to-r from-orang to-orang p-10">
+    <section className="relative flex w-full min-h-screen justify-start items-start bg-gradient-to-r from-orang to-orang p-10">
       <div className="absolute w-40 h-40 bg-white opacity-20 rounded-full top-10 left-10"></div>
       <div className="absolute w-24 h-24 bg-white opacity-20 rounded-full bottom-20 right-20"></div>
 
@@ -264,7 +264,7 @@ const deleteGalleryHandler = (id) => {
                 </div>
               </div>
 
-              <div className="flex gap-2">
+              <div className="flex flex-col gap-2">
                 <button className="text-xl text-blue-500" onClick={() => handleEdit(elem?._id)}>
                   <MdEdit />
                 </button>
