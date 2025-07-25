@@ -142,8 +142,9 @@ const deleteGalleryHandler = (id) => {
       <div className="absolute w-40 h-40 bg-white opacity-20 rounded-full top-10 left-10"></div>
       <div className="absolute w-24 h-24 bg-white opacity-20 rounded-full bottom-20 right-20"></div>
 
-      <div className="w-[45rem] bg-white p-6 flex flex-col gap-4 rounded-2xl shadow-2xl items-center font-helvetica relative z-10 mx-12">
-        <h1 className="text-3xl font-bold text-pink-600">Add a Gallery</h1>
+      <div className="   w-[45rem] bg-white flex flex-col font-helvetica relative z-10 mx-12">
+        <div className="w-fullflex flex-col gap-4  fixed bg-white   p-6 rounded-2xl shadow-2xl items-center ">
+        <h1 className="text-3xl font-bold text-pink-600 pb-6">Add a Gallery</h1>
         {successMessage && (
           <div className="w-full bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
             <span className="block sm:inline">{successMessage}</span>
@@ -238,6 +239,7 @@ const deleteGalleryHandler = (id) => {
             </Form>
           )}
         </Formik>
+        </div>
       </div>
 
       <div className="w-full max-w-5xl px-4 mt-10 mx-auto">

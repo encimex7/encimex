@@ -29,10 +29,8 @@ const Services = ({ serviceDetail , serviceId }) => {
 
     if (!serviceDetail || serviceDetail.length === 0) {
         return (
-            <div className="bg-[#0D0D0D] text-white py-8 px-4">
-                <div className="max-w-6xl mx-auto">
-                    <h2 className="text-4xl mb-6">Our services</h2>
-                    <p className="text-gray-400">No service details available.</p>
+            <div className="bg-[#0D0D0D] text-white py-0 px-4">
+                <div className="max-w-6xl mx-auto">   
                 </div>
             </div>
         );

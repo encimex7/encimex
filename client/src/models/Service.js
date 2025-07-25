@@ -35,7 +35,6 @@ const ServiceSchema = new mongoose.Schema({
   },
   service_detail: {
     type: [serviceDetailSchema],
-    required: true
   },
   photos: { 
     type: [String],

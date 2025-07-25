@@ -101,9 +101,9 @@ function Service() {
                     </div>
 
                     <div>
-                      <p className="text-sm md:text-base leading-relaxed mb-6 line-clamp-5 text-justify">
-                        {service.description}
-                      </p>
+                      <p className="text-sm md:text-base leading-relaxed mb-6 line-clamp-5 text-justify"
+                         dangerouslySetInnerHTML={{ __html: service.description || '' }} />
+                      {/* </p> */}
                     </div>
 
                     <div className="flex md:justify-end md:items-end pb-4">

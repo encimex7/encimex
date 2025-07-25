@@ -5,9 +5,7 @@ import ProjectSection from "@/components/user/Service/Projects";
 import Services from "@/components/user/Service/Services";
 import { use, useEffect, useState } from "react";
 import { FileText, X, Download, ZoomIn, ZoomOut } from "lucide-react";
-import servicebanner from "../../../../../public/assets/images/servicebanner.png";
-
-
+import DescriptionSection from "@/components/user/Service/DescriptionSection";
 
 export default function Service({ params }) {
   const [service, setService] = useState(null);
@@ -123,6 +121,11 @@ export default function Service({ params }) {
       <ProjectSection
         photos={galleryImages}
       />
+
+      <DescriptionSection
+        heading={service.title}
+        description={service.description}
+      />
       
        {/* PDF Section - only if the url slug is /facade-detailing */}
       {serviceId === "facade-detailing" && (
@@ -234,6 +237,7 @@ export default function Service({ params }) {
           </div>
         </div>
       )}
+
     </section>
   );
 }

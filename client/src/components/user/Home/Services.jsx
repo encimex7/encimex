@@ -163,9 +163,10 @@ export default function ServicesSection() {
                                   </Link>
                                 </div>
                                 <div className="md:w-[57%] w-full">
-                                  <p className="text-white text-xl font-light md:pr-20 leading-relaxed line-clamp-5">
-                                    {service.description}
-                                  </p>
+                                  <p className="text-white text-xl font-light md:pr-20 leading-relaxed line-clamp-5"
+                                    dangerouslySetInnerHTML={{ __html: service.description || '' }} />
+                                    {/* {service.description} */}
+                                  {/* </p> */}
                                   <div className="flex md:justify-end md:items-end pt-4">
                                     <Link href={`/service/${service.slug}`}>
                                       <div className="flex flex-row items-center justify-center gap-2 md:w-full w-full border border-orang rounded-full cursor-pointer px-1">

@@ -23,6 +23,7 @@ export default function Gallery() {
     const [selectedImage, setSelectedImage] = useState(null);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [activeTab, setActiveTab] = useState('steel-detailing');
+    const [activeTabOffice, setActiveTabOffice] = useState('Onam celebration 2022');
     const [isLoading, setIsLoading] = useState(true);
     const [visibleOfficeImages, setVisibleOfficeImages] = useState(8);
 
@@ -47,6 +48,12 @@ export default function Gallery() {
                     setMepImages(mep);
                     setArchitecturalImages(architectural);
                     setFacadeImages(facade);
+
+                    // Set the first office title as default if available
+                    if (office.length > 0) {
+                        const uniqueTitles = Array.from(new Set(office.map(img => img.title)));
+                        setActiveTabOffice(uniqueTitles[0]);
+                    }
                 }
             } catch (error) {
                 console.error('Error fetching galleries:', error);
@@ -90,8 +97,13 @@ export default function Gallery() {
         }
     };
 
+    // New function to get current office images based on selected office tab
+    const getCurrentOfficeImages = () => {
+        return officeImages.filter(img => img.title === activeTabOffice);
+    };
+
     const handlePrevious = () => {
-        const currentImages = activeTab === 'office' ? officeImages : getCurrentProjectImages();
+        const currentImages = getCurrentOfficeImages();
         setCurrentIndex((prevIndex) => 
             prevIndex === 0 ? currentImages.length - 1 : prevIndex - 1
         );
@@ -99,48 +111,14 @@ export default function Gallery() {
     };
 
     const handleNext = () => {
-        const currentImages = activeTab === 'office' ? officeImages : getCurrentProjectImages();
+        const currentImages = getCurrentOfficeImages();
         setCurrentIndex((prevIndex) => 
             prevIndex === currentImages.length - 1 ? 0 : prevIndex + 1
         );
         setSelectedImage(currentImages[currentIndex === currentImages.length - 1 ? 0 : currentIndex + 1]);
     };
 
-    const ImageGrid = ({ images, onImageClick, showTitle = false }) => (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {images.length > 0 ? (
-                images.map((img, idx) => (
-                    <div
-                        key={idx}
-                        className="flex flex-col gap-2"
-                    >
-                        <div
-                            className="relative aspect-square group cursor-pointer overflow-hidden rounded-lg"
-                            onClick={() => onImageClick(img, idx)}
-                        >
-                            <Image
-                                src={img.image}
-                                alt={`Gallery ${idx + 1}`}
-                                fill
-                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                                className="object-cover transition-transform duration-300 group-hover:scale-110"
-                            />
-                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                        </div>
-                        {showTitle && img.title && (
-                            <div className="flex flex-col gap-2 border-2 border-orang py-2 rounded-lg bg-orang/30">
-                            <h2 className="text-white text-lg text-left pl-4 capitalize">{img.title}</h2>
-                            </div>
-                        )}
-                    </div>
-                ))
-            ) : (
-                <div className="col-span-full flex justify-center items-center py-20">
-                    <p className="text-white/60 text-lg">No images available</p>
-                </div>
-            )}
-        </div>
-    );
+    const uniqueOfficeTitles = Array.from(new Set(officeImages.map(img => img.title)));
 
     const ProjectGallery = ({ images, onImageClick }) => (
         <Swiper
@@ -238,23 +216,31 @@ export default function Gallery() {
                     </div>
 
                     {/* Office Gallery Section */}
-                    <div className="space-y-8">
+                     <div className="space-y-8">
                         <h2 className="text-3xl font-base text-white">Office Gallery</h2>
-                        <ImageGrid 
-                            images={officeImages.slice(0, visibleOfficeImages)} 
-                            onImageClick={handleImageClick}
-                            showTitle={true}
-                        />
-                        {officeImages.length > visibleOfficeImages && (
-                            <div className="flex justify-center">
+                        
+                        {/* Tab Navigation */}
+                        <div className="flex flex-wrap gap-4">
+                            {uniqueOfficeTitles.map((tab) => (
                                 <button
-                                    onClick={handleLoadMore}
-                                    className="px-8 py-3 bg-orang text-white rounded-full hover:bg-orang/90 transition-colors duration-300"
+                                    key={tab}
+                                    onClick={() => setActiveTabOffice(tab)}
+                                    className={`px-6 py-2 rounded-full transition-all duration-300 ${
+                                        activeTabOffice === tab
+                                            ? 'bg-orang text-white'
+                                            : 'bg-white/10 text-white hover:bg-white/20'
+                                    }`}
                                 >
-                                    Load More
+                                    {tab.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
                                 </button>
-                            </div>
-                        )}
+                            ))}
+                        </div>
+
+                        {/* Office Images with Swiper */}
+                        <ProjectGallery 
+                            images={getCurrentOfficeImages()} 
+                            onImageClick={handleImageClick}
+                        />
                     </div>
                 </div>
             )}
