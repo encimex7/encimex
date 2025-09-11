@@ -22,10 +22,11 @@ export default function Gallery() {
     const [facadeImages, setFacadeImages] = useState([]);
     const [selectedImage, setSelectedImage] = useState(null);
     const [currentIndex, setCurrentIndex] = useState(0);
+    // ADDED: New state to hold the active image set for the modal
+    const [activeImageSet, setActiveImageSet] = useState([]); 
     const [activeTab, setActiveTab] = useState('steel-detailing');
     const [activeTabOffice, setActiveTabOffice] = useState('Onam celebration 2022');
     const [isLoading, setIsLoading] = useState(true);
-    const [visibleOfficeImages, setVisibleOfficeImages] = useState(8);
 
     useEffect(() => {
         const fetchGalleries = async () => {
@@ -49,7 +50,6 @@ export default function Gallery() {
                     setArchitecturalImages(architectural);
                     setFacadeImages(facade);
 
-                    // Set the first office title as default if available
                     if (office.length > 0) {
                         const uniqueTitles = Array.from(new Set(office.map(img => img.title)));
                         setActiveTabOffice(uniqueTitles[0]);
@@ -65,82 +65,67 @@ export default function Gallery() {
         fetchGalleries();
     }, []);
 
-    const handleImageClick = (image, index) => {
+    // MODIFIED: handleImageClick now accepts the entire image set
+    const handleImageClick = (image, index, imageSet) => {
         setSelectedImage(image);
         setCurrentIndex(index);
+        setActiveImageSet(imageSet); // Store the correct image array
     };
 
     const handleClose = () => {
         setSelectedImage(null);
-    };
-
-    const handleLoadMore = () => {
-        setVisibleOfficeImages(prev => prev + 8);
+        setActiveImageSet([]); // Clear the set on close
     };
 
     const getCurrentProjectImages = () => {
         switch (activeTab) {
-            case 'steel-detailing':
-                return steelImages;
-            case 'rebar-detailing':
-                return rebarImages;
-            case 'connection-design-pe-stamping':
-                return connectionImages;    
-            case 'mep-bim-services':
-                return mepImages;
-            case 'architectural-bimservices':
-                return architecturalImages;
-            case 'facade-detailing':
-                return facadeImages;
-            default:
-                return steelImages;
+            case 'steel-detailing': return steelImages;
+            case 'rebar-detailing': return rebarImages;
+            case 'connection-design-pe-stamping': return connectionImages;   
+            case 'mep-bim-services': return mepImages;
+            case 'architectural-bimservices': return architecturalImages;
+            case 'facade-detailing': return facadeImages;
+            default: return steelImages;
         }
     };
 
-    // New function to get current office images based on selected office tab
     const getCurrentOfficeImages = () => {
         return officeImages.filter(img => img.title === activeTabOffice);
     };
 
+    // MODIFIED: This now uses the 'activeImageSet' state
     const handlePrevious = () => {
-        const currentImages = getCurrentOfficeImages();
-        setCurrentIndex((prevIndex) => 
-            prevIndex === 0 ? currentImages.length - 1 : prevIndex - 1
-        );
-        setSelectedImage(currentImages[currentIndex === 0 ? currentImages.length - 1 : currentIndex - 1]);
+        if (activeImageSet.length === 0) return;
+        const newIndex = currentIndex === 0 ? activeImageSet.length - 1 : currentIndex - 1;
+        setCurrentIndex(newIndex);
+        setSelectedImage(activeImageSet[newIndex]);
     };
 
+    // MODIFIED: This also now uses the 'activeImageSet' state
     const handleNext = () => {
-        const currentImages = getCurrentOfficeImages();
-        setCurrentIndex((prevIndex) => 
-            prevIndex === currentImages.length - 1 ? 0 : prevIndex + 1
-        );
-        setSelectedImage(currentImages[currentIndex === currentImages.length - 1 ? 0 : currentIndex + 1]);
+        if (activeImageSet.length === 0) return;
+        const newIndex = currentIndex === activeImageSet.length - 1 ? 0 : currentIndex + 1;
+        setCurrentIndex(newIndex);
+        setSelectedImage(activeImageSet[newIndex]);
     };
 
     const uniqueOfficeTitles = Array.from(new Set(officeImages.map(img => img.title)));
 
+    // MODIFIED: The component's onImageClick now passes the image set
     const ProjectGallery = ({ images, onImageClick }) => (
         <Swiper
             modules={[Navigation, Autoplay]}
             spaceBetween={30}
             slidesPerView={1}
-            // navigation
             autoplay={{
                 delay: 3000,
                 disableOnInteraction: false,
             }}
             loop={true}
             breakpoints={{
-                640: {
-                    slidesPerView: 2,
-                },
-                1024: {
-                    slidesPerView: 3,
-                },
-                1280: {
-                    slidesPerView: 4,
-                },
+                640: { slidesPerView: 2 },
+                1024: { slidesPerView: 3 },
+                1280: { slidesPerView: 4 },
             }}
             className="w-full"
         >
@@ -150,7 +135,8 @@ export default function Gallery() {
                         <div className="flex flex-col gap-2">
                             <div
                                 className="relative aspect-square group cursor-pointer overflow-hidden rounded-lg"
-                                onClick={() => onImageClick(img, idx)}
+                                // This now passes the 'images' array itself
+                                onClick={() => onImageClick(img, idx, images)}
                             >
                                 <Image
                                     src={img.image}
@@ -159,11 +145,10 @@ export default function Gallery() {
                                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                                     className="object-cover transition-transform duration-300 group-hover:scale-110"
                                 />
-                                {/* <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300" /> */}
                             </div>
                             {img.subTitle && (
-                                <div className="flex flex-col gap-2 border-2 border-orang py-2 rounded-lg bg-orang/30">
-                                <h2 className="text-white text-base text-left pl-4 capitalize">{img.subTitle}</h2>
+                                <div className="flex flex-col gap-2 border-2 border-orang py-2 rounded-lg bg-orang/30 h-16">
+                                    <h2 className="text-white text-base text-left pl-4 capitalize">{img.subTitle}</h2>
                                 </div>
                             )}
                         </div>
@@ -191,13 +176,12 @@ export default function Gallery() {
                     <div className="space-y-8">
                         <h2 className="text-3xl font-base text-white">Project Gallery</h2>
                         
-                        {/* Tab Navigation */}
-                        <div className="flex flex-wrap gap-4">
+                        <div className="flex flex-wrap md:gap-4 gap-2">
                             {['steel-detailing', 'rebar-detailing', 'connection-design-pe-stamping', 'mep-bim-services', 'architectural-bimservices', 'facade-detailing'].map((tab) => (
                                 <button
                                     key={tab}
                                     onClick={() => setActiveTab(tab)}
-                                    className={`px-6 py-2 rounded-full transition-all duration-300 ${
+                                    className={`md:px-6 px-3  py-2 rounded-full transition-all duration-300 ${
                                         activeTab === tab
                                             ? 'bg-orang text-white'
                                             : 'bg-white/10 text-white hover:bg-white/20'
@@ -208,7 +192,6 @@ export default function Gallery() {
                             ))}
                         </div>
 
-                        {/* Project Images with Swiper */}
                         <ProjectGallery 
                             images={getCurrentProjectImages()} 
                             onImageClick={handleImageClick}
@@ -219,13 +202,12 @@ export default function Gallery() {
                      <div className="space-y-8">
                         <h2 className="text-3xl font-base text-white">Office Gallery</h2>
                         
-                        {/* Tab Navigation */}
-                        <div className="flex flex-wrap gap-4">
+                        <div className="flex flex-wrap md:gap-4 gap-2">
                             {uniqueOfficeTitles.map((tab) => (
                                 <button
                                     key={tab}
                                     onClick={() => setActiveTabOffice(tab)}
-                                    className={`px-6 py-2 rounded-full transition-all duration-300 ${
+                                    className={`md:px-6 px-3  py-2 rounded-full transition-all duration-300 ${
                                         activeTabOffice === tab
                                             ? 'bg-orang text-white'
                                             : 'bg-white/10 text-white hover:bg-white/20'
@@ -236,7 +218,6 @@ export default function Gallery() {
                             ))}
                         </div>
 
-                        {/* Office Images with Swiper */}
                         <ProjectGallery 
                             images={getCurrentOfficeImages()} 
                             onImageClick={handleImageClick}
@@ -267,7 +248,6 @@ export default function Gallery() {
                             </svg>
                         </button>
 
-                        {/* Left Navigation */}
                         <button
                             onClick={handlePrevious}
                             className="absolute md:-left-12 left-6 top-1/2 -translate-y-1/2 z-10 group bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full p-4 border border-white/20 hover:border-white/40 transition-all duration-300 hover:scale-105"
@@ -286,7 +266,6 @@ export default function Gallery() {
                             />
                         </div>
 
-                        {/* Right Navigation */}
                         <button
                             onClick={handleNext}
                             className="absolute md:-right-12 right-6 top-1/2 -translate-y-1/2 z-10 group bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full p-4 border border-white/20 hover:border-white/40 transition-all duration-300 hover:scale-105"

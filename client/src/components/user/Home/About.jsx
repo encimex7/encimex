@@ -132,9 +132,11 @@ function About() {
     //   }
     // };
 
+    console.log(galleryImages)
+
   return (
      <div className="relative h-auto  overflow-hidden bg-[#0D0D0D]  ">
-            <div className="relative text-white md:h-screen h-[79vh] w-full mx-auto">
+            <div className="relative text-white md:h-screen h-[79vh] w-full mx-auto ">
     
                     {/* Background picture */}
                     <div className="absolute inset-0 top-0 opacity-40 z-0 w-full">
@@ -159,7 +161,7 @@ function About() {
                          className='text-orang text-3xl'>WHO WE <span className='text-white'>ARE</span>   </motion.h1>
                         </div>
 
-                        <div className='md:block absolute hidden md:top-[25.5%] top-[15%] md:left-[0%] w-[57.7%] pr-4 h-[58vh] px-12 '>
+                        <div className='md:block absolute hidden md:top-[28.5%] top-[15%] md:left-[0%] w-[57.7%] pr-4 h-[62vh] px-12 '>
                             <div className="relative w-full h-full bg-transparent rounded-lg overflow-hidden">
                               {!imagesLoaded ? (
                                 // Loading placeholder
@@ -188,7 +190,7 @@ function About() {
                                   {galleryImages.map((photo, index) => (
                                     <SwiperSlide key={index} className="h-full">
                                       <Link href={`/service/steel-detailing`} passHref>
-                                      <div className="relative h-full rounded-lg overflow-hidden cursor-pointer">
+                                      <div className="relative h-[87%] rounded-lg overflow-hidden cursor-pointer">
                                         <Image 
                                           src={photo.image} 
                                           alt="steel detail image"
@@ -202,6 +204,14 @@ function About() {
                                           }}
                                         />
                                       </div>
+
+                                       {/* {photo.subTitle && ( */}
+                                          <div className="flex flex-col gap-2 border-2 border-orang py-1 rounded-lg bg-orang/30 h-auto mt-3">
+                                              <h2 className="text-white  text-left pl-3 capitalize  text-sm">{photo.subTitle}</h2>
+                                          </div>
+                                      {/* )} */}
+
+
                                       </Link>
                                     </SwiperSlide>            
                                   ))}
